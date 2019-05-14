@@ -1,0 +1,2 @@
+-- SQL day 03
+-- WHERE
