@@ -410,3 +410,98 @@ ORA-00904: "급여평균": 부적합한 식별자
 6. SELECT    절에 명시된 컬럼, 식(함수 식)만 출력
 7. ORDER BY  가 있다면 정렬 조건에 맞춰어 최종 정렬하여 결과 출력
 */
+
+-- 1. 매니저별, 부하직원의 수를 구하고, 많은 순으로 정렬
+--   : mgr 컬럼이 그룹화 기준 컬럼
+SELECT e.mgr
+      ,TO_CHAR(COUNT(e.mgr), '99')
+  FROM emp e
+ GROUP BY e.mgr
+ ORDER BY e.mgr
+;
+
+-- 2.1 부서별 인원을 구하고, 인원수 많은 순으로 정렬
+--    : deptno 컬럼이 그룹화 기준 컬럼
+SELECT e.deptno
+      ,TO_CHAR(COUNT(e.deptno), '99') "부서 별 인원"
+  FROM emp e
+ GROUP BY e.deptno
+ ORDER BY COUNT(e.deptno)
+;
+
+-- 2.2 부서 배치 미배정 인원 처리
+SELECT e.deptno
+      ,TO_CHAR(COUNT(NVL(e.deptno,1)), '99') "부서 별 인원"
+  FROM emp e
+ GROUP BY e.deptno
+ ORDER BY COUNT(e.deptno)
+;
+
+-- 3.1 직무별 급여 평균 구하고, 급여평균 높은 순으로 정렬
+--   : job 이 그룹화 기준 컬럼
+SELECT e.job
+      ,TO_CHAR(AVG(e.sal),'$9,9999') "급여 평균"
+  FROM emp e
+ GROUP BY e.job
+ ORDER BY AVG(e.sal) DESC
+;
+
+-- 3.2 job 이 null 인 데이터 처리
+SELECT e.job
+      ,NVL(TO_CHAR(AVG(e.sal),'$9,9999'),'직무 미배정') "급여 평균"
+  FROM emp e
+ GROUP BY e.job
+ ORDER BY AVG(e.sal) DESC
+;
+
+
+-- 4. 직무별 급여 총합 구하고, 총합 높은 순으로 정렬
+--   : job 이 그룹화 기준 컬럼
+SELECT e.job
+       ,TO_CHAR(SUM(e.sal),'$9,9999')
+  FROM emp e
+ GROUP BY e.job
+ ORDER BY SUM(e.sal) DESC
+;
+
+-- 5. 급여의 앞단위가 1000미만, 1000, 2000, 3000, 5000 별로 인원수를 구하시오
+--    급여 단위 오름차순으로 정렬
+SELECT NVL2(TO_CHAR(floor(e.sal/1000))
+           ,TO_CHAR(floor(e.sal/1000))||'단위','급여없음') "급여단위"
+      ,count(*)
+  FROM emp e 
+ GROUP BY floor(e.sal/1000)
+ ORDER BY floor(e.sal/1000) DESC
+;
+
+
+-- 6. 직무별 급여 합의 단위를 구하고, 급여 합의 단위가 큰 순으로 정렬
+SELECT e.job "직무"
+       ,TO_CHAR(FLOOR(SUM(e.sal)/1000),'99') "급여 합의 단위"
+   FROM emp e
+  GROUP BY e.job
+  ORDER BY FLOOR(SUM(e.sal)/1000) DESC
+;
+
+
+
+-- 7. 직무별 급여 평균이 2000이하인 경우를 구하고 평균이 높은 순으로 정렬
+SELECT e.job 직무
+    ,TO_CHAR(AVG(e.sal),'$9,999') "급여 평균"
+  FROM emp e
+ GROUP BY e.job
+HAVING AVG(e.sal)<=2000
+ ORDER BY AVG(e.sal) DESC
+;
+
+
+-- 8. 년도별 입사 인원을 구하시오
+SELECT NVL(TO_CHAR(e.hiredate,'YY'),'해당 없음') 입사년월
+      ,COUNT(*) "인원 수"
+  FROM emp e
+ GROUP BY TO_CHAR(e.hiredate,'YY')
+ ORDER BY TO_CHAR(e.hiredate,'YY')
+;
+
+
+
