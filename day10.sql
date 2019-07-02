@@ -142,7 +142,7 @@ SELECT e.empno
 SELECT e.empno
       ,e.ename
       ,e.deptno
-  FROM emp  e JOIN dept d USING(deptno)
+  FROM emp  e JOIN dept d USING (deptno)
   -- USING뒤에 공통 컬럼을 별칭없이 명시
 ;
 
@@ -468,7 +468,7 @@ SELECT NVL(d.dname, '부서 미배정') "부서 명"
      , COUNT(e.empno)"인원(명)" 
   FROM emp e FULL OUTER JOIN dept d ON (e.deptno = d.deptno) 
   GROUP BY d.dname 
-  ORDER BY d.dname 
+  ORDER BY d.dname
 ; 
 
 
