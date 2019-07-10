@@ -22,7 +22,7 @@ GRANT CREATE VIEW TO SCOTT;
 CONN SCOTT/TIGER ;
 
 --------------------------------------------------------------------------------
-
+-- 1111
 -- 1. EMP, DEPT 테이블 복사
 DROP TABLE NEW_EMP;
 CREATE TABLE NEW_EMP
